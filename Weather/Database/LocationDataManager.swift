@@ -24,7 +24,6 @@ enum RuntimeError: Error {
 class LocationDataManager: DatabaseCapable {
 
     var realm: Realm?
-    var lastTappedLocation: Location?
     
     // MARK: - Instantiate
     init(_ realm: Realm) {

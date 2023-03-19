@@ -50,7 +50,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xva-1W-Bce">
-                                <rect key="frame" x="317" y="778" width="56" height="56"/>
+                                <rect key="frame" x="317" y="756" width="56" height="56"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="56" id="64o-mW-aWj"/>
                                     <constraint firstAttribute="width" constant="56" id="f5H-4z-ArO"/>
@@ -76,10 +76,10 @@
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="Xva-1W-Bce" secondAttribute="trailing" constant="20" id="Yiz-jb-3Zc"/>
                             <constraint firstItem="aiz-QX-zJI" firstAttribute="top" secondItem="D7E-3O-QRf" secondAttribute="bottom" constant="5" id="ZNG-CS-5iP"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="aiz-QX-zJI" secondAttribute="trailing" constant="20" id="cy4-z1-bZL"/>
-                            <constraint firstItem="lff-Sz-qSQ" firstAttribute="bottom" secondItem="Xva-1W-Bce" secondAttribute="top" constant="40" id="jYr-H7-8uU"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="dU5-Oh-1bi" secondAttribute="trailing" constant="20" id="qXk-g5-lVM"/>
                             <constraint firstItem="D7E-3O-QRf" firstAttribute="leading" secondItem="lff-Sz-qSQ" secondAttribute="leading" constant="20" id="qlK-vC-bLk"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="D7E-3O-QRf" secondAttribute="trailing" constant="20" id="yk3-l2-dIz"/>
+                            <constraint firstAttribute="bottom" secondItem="Xva-1W-Bce" secondAttribute="bottom" constant="40" id="zHn-Yi-DYv"/>
                         </constraints>
                     </view>
                     <connections>
@@ -103,7 +103,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" placeholder="Location Name" translatesAutoresizingMaskIntoConstraints="NO" id="tmR-A7-Pg4">
+                            <searchBar contentMode="redraw" placeholder="Search here" translatesAutoresizingMaskIntoConstraints="NO" id="tmR-A7-Pg4">
                                 <rect key="frame" x="0.0" y="59" width="393" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>

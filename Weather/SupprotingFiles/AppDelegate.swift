@@ -11,6 +11,21 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var coordinator: MainCoordinator?
+    var orientationLock = UIInterfaceOrientationMask.all
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            // Orientation is set to portrait on iPhone except when showing ChartViewController
+            if self.orientationLock == .allButUpsideDown {
+                return self.orientationLock
+            } else {
+                return .portrait
+            }
+        } else {
+            // Orientation is set to all on iPad
+            return .all
+        }
+    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // creating the main navigation controller to be used in the app
