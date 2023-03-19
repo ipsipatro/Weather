@@ -11,20 +11,20 @@ import RxCocoa
 import RxDataSources
 import MapKit
 
-final class FavouriteCitiesViewModel {
+final class LocationSearchViewModel {
     // MARK: - Input and Output
     struct Input {
-        var selectedCityStream: AnyObserver<(String, Double, Double)>
+        var selectedLocationStream: AnyObserver<(String, Double, Double)>
         var searchResultsStream: AnyObserver<[MKLocalSearchCompletion]>
         var searchItemSelected: AnyObserver<IndexPath>
-        var favouriteCitySelected: AnyObserver<IndexPath>
+        var savedLocationSelected: AnyObserver<IndexPath>
         var itemDeleted: AnyObserver<IndexPath>
     }
     
     struct Output {
-        var didReciveCityWeather: Driver<(City, WeatherResponse)>
-        var searchResultsDataSource: Observable<[SectionModel<String, CityCellModel>]>
-        var favouriteCititesDataSource: Observable<[SectionModel<String, FavouriteCitiesCellModel>]>
+        var didReciveLocationWeather: Driver<(Location, WeatherResponse)>
+        var searchResultsDataSource: Observable<[SectionModel<String, LocationCellModel>]>
+        var savedLocationsDataSource: Observable<[SectionModel<String, SavedLocationCellModel>]>
         var hideSearchResultsViewDriver: Driver<Bool>
         let showPopupDriver: Driver<String>
         let searchForResultDriver: Driver<MKLocalSearchCompletion>
@@ -36,15 +36,15 @@ final class FavouriteCitiesViewModel {
     
     // MARK: - Private variables
     private let httpService: HttpCommunicationCapable
-    private let selectedCitySubject = PublishSubject<(String, Double, Double)>()
-    private let didReciveCityWeatherSubject = PublishSubject<(City, WeatherResponse)>()
+    private let selectedLocationSubject = PublishSubject<(String, Double, Double)>()
+    private let didReciveLocationWeatherSubject = PublishSubject<(Location, WeatherResponse)>()
     private let searchResultsSubject = PublishSubject<[MKLocalSearchCompletion]>()
-    private let searchResultsDataSourceRelay = BehaviorRelay<[SectionModel<String, CityCellModel>]>(value: [])
-    private let cityDataManager: DatabaseCapable
+    private let searchResultsDataSourceRelay = BehaviorRelay<[SectionModel<String, LocationCellModel>]>(value: [])
+    private let locationDataManager: DatabaseCapable
     private let searchItemSelectedSubject = PublishSubject<IndexPath>()
-    private let favouriteCitySelectedSubject = PublishSubject<IndexPath>()
+    private let savedLocationSelectedSubject = PublishSubject<IndexPath>()
     private let itemDeletedSubject = PublishSubject<IndexPath>()
-    private let favouriteResultsDataSourceRelay = BehaviorRelay<[SectionModel<String, FavouriteCitiesCellModel>]>(value: [])
+    private let savedLocationsDataSourceRelay = BehaviorRelay<[SectionModel<String, SavedLocationCellModel>]>(value: [])
     private let showPopupSubject = PublishSubject<String>()
     private let hideSearchResultsViewSubject = PublishSubject<Bool>()
     private let loadingStatusSubject = PublishSubject<Bool>()
@@ -52,17 +52,17 @@ final class FavouriteCitiesViewModel {
     private let disposeBag = DisposeBag()
     
     // MARK: - Instantiate
-    init(httpService: HttpCommunicationCapable, cityDataManager: DatabaseCapable, showCityListButtonTapped: Bool) {
+    init(httpService: HttpCommunicationCapable, locationDataManager: DatabaseCapable, showSavedLocationsButtonTapped: Bool) {
         self.httpService = httpService
-        self.cityDataManager = cityDataManager
-        input = Input(selectedCityStream: selectedCitySubject.asObserver(),
+        self.locationDataManager = locationDataManager
+        input = Input(selectedLocationStream: selectedLocationSubject.asObserver(),
                       searchResultsStream: searchResultsSubject.asObserver(),
                       searchItemSelected: searchItemSelectedSubject.asObserver(),
-                      favouriteCitySelected: favouriteCitySelectedSubject.asObserver(),
+                      savedLocationSelected: savedLocationSelectedSubject.asObserver(),
                       itemDeleted: itemDeletedSubject.asObserver())
-        output = Output(didReciveCityWeather: didReciveCityWeatherSubject.asDriverLogError(),
+        output = Output(didReciveLocationWeather: didReciveLocationWeatherSubject.asDriverLogError(),
                         searchResultsDataSource: searchResultsDataSourceRelay.asObservable(),
-                        favouriteCititesDataSource: favouriteResultsDataSourceRelay.asObservable(),
+                        savedLocationsDataSource: savedLocationsDataSourceRelay.asObservable(),
                         hideSearchResultsViewDriver: hideSearchResultsViewSubject.asDriverLogError(),
                         showPopupDriver: showPopupSubject.asDriverLogError(),
                         searchForResultDriver: searchForResultSubject.asDriverLogError(),
@@ -71,17 +71,17 @@ final class FavouriteCitiesViewModel {
         bindObservers()
         buildDataSource()
         
-        if(!showCityListButtonTapped) {
-            showLastTappedCityWeather()
+        if(!showSavedLocationsButtonTapped) {
+            showLastTappedLocationWeather()
         }
     }
     
     // MARK: - Private methods
     private func bindObservers() {
         // Bind observers for serch results
-        selectedCitySubject.asObservable().subscribe(onNext: { [weak self] (name, lat, lon) in
+        selectedLocationSubject.asObservable().subscribe(onNext: { [weak self] (name, lat, lon) in
             guard let self = self else { return }
-            self.sendRequestWith(city: self.cityDataManager.makeNewCity(name: name, latitude: lat, longitude: lon))
+            self.sendRequestWith(location: self.locationDataManager.makeANewLocationWith(name, latitude: lat, longitude: lon))
         }).disposed(by: disposeBag)
         
         self.searchItemSelectedSubject.asObservable()
@@ -94,35 +94,35 @@ final class FavouriteCitiesViewModel {
             })
             .disposed(by: disposeBag)
         
-        // bind observers for favourite cities
-        self.favouriteCitySelectedSubject.asObservable()
-            .withLatestFrom(self.favouriteResultsDataSourceRelay.asObservable()) { (indexPath, dataSource) -> City in
+        // bind observers for saved locations
+        self.savedLocationSelectedSubject.asObservable()
+            .withLatestFrom(self.savedLocationsDataSourceRelay.asObservable()) { (indexPath, dataSource) -> Location in
                 let selectedItem = dataSource[indexPath.section].items[indexPath.row]
-                return selectedItem.city
+                return selectedItem.location
             }
-            .subscribe(onNext: { [weak self] city in
+            .subscribe(onNext: { [weak self] location in
                 do {
-                    try self?.cityDataManager.saveCityData(city)
+                    try self?.locationDataManager.saveLocationData(location)
                 } catch {
-                    fatalError("Error in saving city: \(error.localizedDescription)")
+                    fatalError("Error in saving location: \(error.localizedDescription)")
                 }
-                self?.sendRequestWith(city: City(value: city))
+                self?.sendRequestWith(location: Location(value: location))
             })
             .disposed(by: disposeBag)
         
         // bind observers for deleting object
         itemDeletedSubject.asObservable()
-            .withLatestFrom(self.favouriteResultsDataSourceRelay.asObservable()) { (indexPath, dataSource) -> City in
+            .withLatestFrom(self.savedLocationsDataSourceRelay.asObservable()) { (indexPath, dataSource) -> Location in
                 let selectedItem = dataSource[indexPath.section].items[indexPath.row]
-                return selectedItem.city
+                return selectedItem.location
             }
-            .subscribe(onNext: { [weak self] city in
+            .subscribe(onNext: { [weak self] location in
                 do {
-                    try self?.cityDataManager.deleteCityData(city)
+                    try self?.locationDataManager.deleteLocationData(location)
                 } catch {
-                    fatalError("Error in deleting city: \(error.localizedDescription)")
+                    fatalError("Error in deleting location: \(error.localizedDescription)")
                 }
-                self?.getFavouriteCititesDataSource()
+                self?.getSavedLocationsDataSource()
             })
             .disposed(by: disposeBag)
         
@@ -132,47 +132,47 @@ final class FavouriteCitiesViewModel {
         // Building data source for search results table
         searchResultsSubject.asObservable().subscribe(onNext: { [weak self] seachResults in
             self?.hideSearchResultsViewSubject.onNext(seachResults.isEmpty)
-            let cityCellItems: [CityCellModel] =  seachResults.map { result in
-                return CityCellModel(result: result)
+            let locationCellItems: [LocationCellModel] =  seachResults.map { result in
+                return LocationCellModel(result: result)
             }
-            self?.searchResultsDataSourceRelay.accept([SectionModel(model: "", items: cityCellItems)])
+            self?.searchResultsDataSourceRelay.accept([SectionModel(model: "", items: locationCellItems)])
         }).disposed(by: disposeBag)
         
-        getFavouriteCititesDataSource()
+        getSavedLocationsDataSource()
     }
     
-    private func getFavouriteCititesDataSource() {
+    private func getSavedLocationsDataSource() {
         do {
-            let favouriteCitites = try cityDataManager.getAllSavedCities()
-            let favouriteCityCellItems: [FavouriteCitiesCellModel] =  favouriteCitites.map { city in
-                return FavouriteCitiesCellModel(city: city)
+            let savedLocations = try locationDataManager.getAllSavedLocations()
+            let savedLocationCellItems: [SavedLocationCellModel] =  savedLocations.map { location in
+                return SavedLocationCellModel(location: location)
             }
-            self.favouriteResultsDataSourceRelay.accept([SectionModel(model: "", items: favouriteCityCellItems)])
+            self.savedLocationsDataSourceRelay.accept([SectionModel(model: "", items: savedLocationCellItems)])
         } catch {
-            fatalError("Error in getting cities: \(error.localizedDescription)")
+            fatalError("Error in getting locations: \(error.localizedDescription)")
         }
     }
     
-    private func showLastTappedCityWeather() {
+    private func showLastTappedLocationWeather() {
         do {
-            guard let lastTappedCity = try cityDataManager.getLastTappedCity() else { return }
-            try self.cityDataManager.saveCityData(lastTappedCity)
-            self.sendRequestWith(city: lastTappedCity)
+            guard let lastTappedLocation = try locationDataManager.getLastTappedLocation() else { return }
+            try self.locationDataManager.saveLocationData(lastTappedLocation)
+            self.sendRequestWith(location: lastTappedLocation)
         } catch {
-            fatalError("Error in deleting city: \(error.localizedDescription)")
+            fatalError("Error in deleting location: \(error.localizedDescription)")
         }
     }
     
-    private func sendRequestWith(city: City) {
+    private func sendRequestWith(location: Location) {
         loadingStatusSubject.onNext(true)
-        httpService.fetchWeatcherReportFor(lat: city.latitude, lon: city.longitude).asObservable()
+        httpService.fetchWeatcherReportFor(lat: location.latitude, lon: location.longitude).asObservable()
             .materialize()
             .subscribe(onNext: { [weak self] event in
                 guard let self = self else { return }
                 self.loadingStatusSubject.onNext(false)
                 switch event {
                 case .next(let weatherResponse):
-                    self.didReciveCityWeatherSubject.onNext((city, weatherResponse))
+                    self.didReciveLocationWeatherSubject.onNext((location, weatherResponse))
                 case .error(let err):
                     self.showPopupSubject.onNext(err.localizedDescription)
                 default:

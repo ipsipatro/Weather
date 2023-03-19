@@ -1,5 +1,5 @@
 //
-//  CustomCityNameTableViewCell.swift
+//  LocationTableViewCell.swift
 //  Weather
 //
 //  Created by Ipsi Patro on 15/03/2023.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class CustomCityNameTableViewCell: UITableViewCell {
+class LocationTableViewCell: UITableViewCell {
     // MARK: - Outlet
-    @IBOutlet weak var cityNameLabel: UILabel!
-    @IBOutlet weak var cityNameDetailsLabel: UILabel!
+    @IBOutlet weak var locationNameLabel: UILabel!
+    @IBOutlet weak var locationDetailsLabel: UILabel!
     
     // MARK: - Life cycle
     override func awakeFromNib() {
@@ -24,7 +24,7 @@ class CustomCityNameTableViewCell: UITableViewCell {
     
     // MARK: - Configure cell
     func configure(name: String, details: String) {
-        self.cityNameLabel.text = name
-        self.cityNameDetailsLabel.text = details
+        self.locationNameLabel.text = name
+        self.locationDetailsLabel.text = details
     }
 }

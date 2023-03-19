@@ -12,7 +12,7 @@ import RealmSwift
 class MainCoordinator: Coordinator {
     var navigationController: UINavigationController
     private let httpCommunicationManager: HttpCommunicationCapable
-    private let cityDataManager: DatabaseCapable
+    private let locationDataManager: DatabaseCapable
     private let disposeBag = DisposeBag()
     
 
@@ -20,37 +20,37 @@ class MainCoordinator: Coordinator {
         self.navigationController = navigationController
         self.httpCommunicationManager = httpCommunicationManager
         let realm = try! Realm(configuration: Realm.Configuration.defaultConfiguration)
-        self.cityDataManager = CityDataManager(realm)
+        self.locationDataManager = LocationDataManager(realm)
     }
 
     func start() {
-        showFavouriteCitiesScreen(showCityListButtonTapped: false)
+        showLocationSearchScreen(showSavedLocationsButtonTapped: false)
     }
     
     // MARK: - Private methods
     // Method to show saved citites screen
-    private func showFavouriteCitiesScreen(showCityListButtonTapped: Bool) {
-        let favouriteCitiesViewController = Factory.views.storyboards.main.favouriteCitiesViewController
-        let favouriteCitiesViewModel = FavouriteCitiesViewModel(httpService: self.httpCommunicationManager, cityDataManager: cityDataManager, showCityListButtonTapped: showCityListButtonTapped)
-        navigationController.pushViewController(favouriteCitiesViewController, animated: false)
-        favouriteCitiesViewController.bind(viewModel: favouriteCitiesViewModel)
+    private func showLocationSearchScreen(showSavedLocationsButtonTapped: Bool) {
+        let locationSearchViewController = Factory.views.storyboards.main.locationSearchViewController
+        let locationSearchViewModel = LocationSearchViewModel(httpService: self.httpCommunicationManager, locationDataManager: locationDataManager, showSavedLocationsButtonTapped: showSavedLocationsButtonTapped)
+        navigationController.pushViewController(locationSearchViewController, animated: false)
+        locationSearchViewController.bind(viewModel: locationSearchViewModel)
         
-        favouriteCitiesViewModel.output.didReciveCityWeather.drive(onNext: { [weak self] (city, weatherResponse) in
+        locationSearchViewModel.output.didReciveLocationWeather.drive(onNext: { [weak self] (location, weatherResponse) in
             guard let self = self else { return }
-            self.showWeatherReport(city: city, weatherResponse: weatherResponse)
+            self.showWeatherReport(location: location, weatherResponse: weatherResponse)
         }).disposed(by: disposeBag)
     }
     
-    // Method to show weather report for selected city
-    private func showWeatherReport(city: City, weatherResponse: WeatherResponse) {
+    // Method to show weather report for selected location
+    private func showWeatherReport(location: Location, weatherResponse: WeatherResponse) {
         let weatherViewController = Factory.views.storyboards.main.weatherViewController
-        let weatherViewModel = WeatherViewModel(cityDataManager: cityDataManager, city: city, weatherResponse: weatherResponse)
+        let weatherViewModel = WeatherViewModel(locationDataManager: locationDataManager, location: location, weatherResponse: weatherResponse)
         weatherViewController.bind(viewModel: weatherViewModel)
         navigationController.pushViewController(weatherViewController, animated: false)
         
-        weatherViewModel.output.showCityListButtonTappedDriver.drive(onNext: { [weak self] _ in
+        weatherViewModel.output.showSavedLocationsButtonTappedDriver.drive(onNext: { [weak self] _ in
             guard let self = self else { return }
-            self.showFavouriteCitiesScreen(showCityListButtonTapped: true)
+            self.showLocationSearchScreen(showSavedLocationsButtonTapped: true)
         }).disposed(by: disposeBag)
         
         weatherViewModel.output.cancelDriver.drive(onNext: { [weak self] _ in

@@ -12,17 +12,17 @@ import RxDataSources
 import RxSwift
 import MapKit
 
-class FavouriteCitiesViewController: UIViewController {
+class LocationSearchViewController: UIViewController {
     // MARK: - Outlet
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var favouriteCitiestableView: UITableView!
+    @IBOutlet weak var savedLocationsTableView: UITableView!
     @IBOutlet weak var searchResultView: UIView!
     @IBOutlet weak var searchResultsTableView: UITableView!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Private variables
-    private var viewModel: FavouriteCitiesViewModel?
+    private var viewModel: LocationSearchViewModel?
     private var searchCompleter = MKLocalSearchCompleter()
     private var searchResults = [MKLocalSearchCompletion]()
     private let disposeBag = DisposeBag()
@@ -41,8 +41,8 @@ class FavouriteCitiesViewController: UIViewController {
         self.searchResultView.isHidden = true
         self.loadingView.isHidden = true
         self.title = "Weather"
-        favouriteCitiestableView.rowHeight = UITableView.automaticDimension
-        favouriteCitiestableView.estimatedRowHeight = 300
+        savedLocationsTableView.rowHeight = UITableView.automaticDimension
+        savedLocationsTableView.estimatedRowHeight = 300
         self.navigationItem.backButtonTitle = ""
         
         handleLoadingView()
@@ -57,7 +57,7 @@ class FavouriteCitiesViewController: UIViewController {
         searchCompleter.delegate = self
         searchBar?.delegate = self
         
-        self.searchResultsTableView.register(UINib(nibName: CustomCityNameTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: CustomCityNameTableViewCell.reuseIdentifier)
+        self.searchResultsTableView.register(UINib(nibName: LocationTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: LocationTableViewCell.reuseIdentifier)
         
         viewModel.output.searchResultsDataSource
             .bind(to: searchResultsTableView.rx.items(dataSource: searchResultsDataSource))
@@ -67,17 +67,17 @@ class FavouriteCitiesViewController: UIViewController {
             .bind(to: viewModel.input.searchItemSelected)
             .disposed(by: disposeBag)
         
-        self.favouriteCitiestableView.register(UINib(nibName: FavouriteCityTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: FavouriteCityTableViewCell.reuseIdentifier)
+        self.savedLocationsTableView.register(UINib(nibName: SavedLocationTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: SavedLocationTableViewCell.reuseIdentifier)
         
-        viewModel.output.favouriteCititesDataSource
-            .bind(to: favouriteCitiestableView.rx.items(dataSource: favouritecitiesDataSource))
+        viewModel.output.savedLocationsDataSource
+            .bind(to: savedLocationsTableView.rx.items(dataSource: favouritecitiesDataSource))
             .disposed(by: disposeBag)
         
-        favouriteCitiestableView.rx.itemSelected
-            .bind(to: viewModel.input.favouriteCitySelected)
+        savedLocationsTableView.rx.itemSelected
+            .bind(to: viewModel.input.savedLocationSelected)
             .disposed(by: disposeBag)
         
-        favouriteCitiestableView.rx.itemDeleted
+        savedLocationsTableView.rx.itemDeleted
             .subscribe(onNext: { indexpath in
                 viewModel.input.itemDeleted.onNext(indexpath)
             })
@@ -99,8 +99,8 @@ class FavouriteCitiesViewController: UIViewController {
         }).disposed(by: disposeBag)
     }
     
-    func bind(viewModel: FavouriteCitiesViewModel) {
-        self.viewModel = (viewModel as FavouriteCitiesViewModel)
+    func bind(viewModel: LocationSearchViewModel) {
+        self.viewModel = (viewModel as LocationSearchViewModel)
     }
     
     // MARK: - Private methods
@@ -119,10 +119,10 @@ class FavouriteCitiesViewController: UIViewController {
             }).disposed(by: disposeBag)
     }
     
-    private var searchResultsDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, CityCellModel>> {
-        return RxTableViewSectionedReloadDataSource<SectionModel<String, CityCellModel>>(configureCell: { _, tableView, indexPath, viewModel -> UITableViewCell in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: CustomCityNameTableViewCell.reuseIdentifier, for: indexPath) as? CustomCityNameTableViewCell else {
-                assertionFailure("Missing CustomCityNameTableViewCell")
+    private var searchResultsDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, LocationCellModel>> {
+        return RxTableViewSectionedReloadDataSource<SectionModel<String, LocationCellModel>>(configureCell: { _, tableView, indexPath, viewModel -> UITableViewCell in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: LocationTableViewCell.reuseIdentifier, for: indexPath) as? LocationTableViewCell else {
+                assertionFailure("Missing LocationTableViewCell")
                 return UITableViewCell()
             }
             cell.configure(name: viewModel.result.title, details: viewModel.result.subtitle)
@@ -130,13 +130,13 @@ class FavouriteCitiesViewController: UIViewController {
         })
     }
     
-    private var favouritecitiesDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, FavouriteCitiesCellModel>> {
-        return RxTableViewSectionedReloadDataSource<SectionModel<String, FavouriteCitiesCellModel>>(configureCell: { _, tableView, indexPath, viewModel -> UITableViewCell in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: FavouriteCityTableViewCell.reuseIdentifier, for: indexPath) as? FavouriteCityTableViewCell else {
-                assertionFailure("Missing FavouriteCityTableViewCell")
+    private var favouritecitiesDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, SavedLocationCellModel>> {
+        return RxTableViewSectionedReloadDataSource<SectionModel<String, SavedLocationCellModel>>(configureCell: { _, tableView, indexPath, viewModel -> UITableViewCell in
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: SavedLocationTableViewCell.reuseIdentifier, for: indexPath) as? SavedLocationTableViewCell else {
+                assertionFailure("Missing SavedLocationTableViewCell")
                 return UITableViewCell()
             }
-            cell.TitleLabel.text = viewModel.city.name
+            cell.TitleLabel.text = viewModel.location.name
             return cell
         })
     }
@@ -153,12 +153,12 @@ class FavouriteCitiesViewController: UIViewController {
             guard let name = response?.mapItems[0].name else {
                 return
             }
-            self.viewModel?.input.selectedCityStream.onNext((name, coordinate.latitude, coordinate.longitude))
+            self.viewModel?.input.selectedLocationStream.onNext((name, coordinate.latitude, coordinate.longitude))
         }
     }
 }
 
-extension FavouriteCitiesViewController: UISearchBarDelegate {
+extension LocationSearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchCompleter.queryFragment = searchText
         if(searchText.isEmpty) {
@@ -171,7 +171,7 @@ extension FavouriteCitiesViewController: UISearchBarDelegate {
     }
 }
 
-extension FavouriteCitiesViewController: MKLocalSearchCompleterDelegate {
+extension LocationSearchViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         searchResults = completer.results
         self.viewModel?.input.searchResultsStream.onNext(completer.results)

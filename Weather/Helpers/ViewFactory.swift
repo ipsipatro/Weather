@@ -22,7 +22,7 @@ struct MainStoryboard {
         return WeatherViewController.instantiate(from: storyboard) as! WeatherViewController
     }
     
-    var favouriteCitiesViewController: FavouriteCitiesViewController {
-        return FavouriteCitiesViewController.instantiate(from: storyboard) as! FavouriteCitiesViewController
+    var locationSearchViewController: LocationSearchViewController {
+        return LocationSearchViewController.instantiate(from: storyboard) as! LocationSearchViewController
     }
 }

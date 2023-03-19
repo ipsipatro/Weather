@@ -20,8 +20,8 @@ class WeatherViewModelTest: QuickSpec {
         
         describe("Weather View Model") {
             var scheduler: TestScheduler!
-            var cityDataManagerFake: CityDataManagerFake!
-            var testCity: City!
+            var locationDataManagerFake: LocationDataManagerFake!
+            var testLocation: Location!
             var weatherResponse: WeatherResponse!
             var bag: DisposeBag!
             
@@ -29,20 +29,20 @@ class WeatherViewModelTest: QuickSpec {
             
             beforeEach {
                 scheduler = TestScheduler(initialClock: 0)
-                cityDataManagerFake = CityDataManagerFake()
-                testCity = cityDataManagerFake.makeNewCity(name: "Test City", latitude: 1.1, longitude: 1.1)
+                locationDataManagerFake = LocationDataManagerFake()
+                testLocation = locationDataManagerFake.makeANewLocationWith("Test Location", latitude: 1.1, longitude: 1.1)
                 bag = DisposeBag()
             }
             
             context("Outputs") {
                 beforeEach {
-                    weatherResponse = WeatherResponse(weather: [CityWeather(description: "Sunny", icon: "04")], name: "Test City", main: MainWeather(temp: 1.2, temp_min: 0.5, temp_max: 2.3))
-                    subject = WeatherViewModel(cityDataManager: cityDataManagerFake, city: testCity, weatherResponse: weatherResponse)
+                    weatherResponse = WeatherResponse(weather: [LocationWeather(description: "Sunny", icon: "04")], name: "Test Location", main: MainWeather(temp: 1.2, temp_min: 0.5, temp_max: 2.3))
+                    subject = WeatherViewModel(locationDataManager: locationDataManagerFake, location: testLocation, weatherResponse: weatherResponse)
                 }
                 
-                it("outputs city name as titleText") {
+                it("outputs location name as titleText") {
                     // Assert
-                    expect(subject.output.titleText).to(equal("Test City"))
+                    expect(subject.output.titleText).to(equal("Test Location"))
                 }
                 
                 it("outputs correct temp values with right formatting") {
@@ -52,23 +52,23 @@ class WeatherViewModelTest: QuickSpec {
                     expect(subject.output.maxTemperatureValue).to(equal("H: 2°C"))
                 }
                 
-                it("outputs correct city weather decription") {
+                it("outputs correct location weather decription") {
                     // Assert
                     expect(subject.output.weatherDescription).to(equal("Sunny"))
                 }
                 
-                it("outputs correct city weather icon url") {
+                it("outputs correct location weather icon url") {
                     // Assert
                     expect(subject.output.iconImageURL).to(equal("https://openweathermap.org/img/wn/04@2x.png"))
                 }
                 
-                it("drives showCityListButtonTappedDriver output") {
+                it("drives showSavedLocationsButtonTappedDriver output") {
                     // Arrange
                     let observer = scheduler.createObserver(Void.self)
-                    subject.output.showCityListButtonTappedDriver.drive(observer).disposed(by: bag)
+                    subject.output.showSavedLocationsButtonTappedDriver.drive(observer).disposed(by: bag)
                     
                     // Act
-                    subject.input.showCityListButtonTapped.onNext(())
+                    subject.input.showSavedLocationsButtonTapped.onNext(())
                     
                     // Assert
                     observer.assertValueCount(1)
@@ -79,7 +79,7 @@ class WeatherViewModelTest: QuickSpec {
                     subject.input.addButtonTapped.onNext(())
                     
                     // Assert
-                    expect(cityDataManagerFake.saveCityDataCalled) == true
+                    expect(locationDataManagerFake.saveLocationDataCalled) == true
                 }
             }
         }

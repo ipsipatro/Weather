@@ -15,7 +15,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var minTemperatureLabel: UILabel!
     @IBOutlet weak var maxTemperatureLabel: UILabel!
     @IBOutlet weak var temeratureDescriptionLabel: UILabel!
-    @IBOutlet weak var showCityListButton: UIButton!
+    @IBOutlet weak var showSavedLocationButton: UIButton!
     
     // MARK: - Private variables
     private var viewModel: WeatherViewModel?
@@ -50,16 +50,14 @@ class WeatherViewController: UIViewController {
             return
         }
         
-        // Title
         self.title = viewModel.output.titleText
         self.temperatureLabel.text = viewModel.output.temperatureValue
         self.maxTemperatureLabel.text = viewModel.output.maxTemperatureValue
         self.minTemperatureLabel.text = viewModel.output.minTemperatureValue
         self.temeratureDescriptionLabel.text = viewModel.output.weatherDescription.capitalized
         
-        // Bind showCityListButton tap
-        self.showCityListButton?.rx.tap.asObservable()
-            .subscribe(viewModel.input.showCityListButtonTapped)
+        self.showSavedLocationButton?.rx.tap.asObservable()
+            .subscribe(viewModel.input.showSavedLocationsButtonTapped)
             .disposed(by: disposeBag)
         
         guard let url = URL(string:viewModel.output.iconImageURL) else { return }

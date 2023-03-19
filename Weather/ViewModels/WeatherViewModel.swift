@@ -12,7 +12,7 @@ import RxCocoa
 final class WeatherViewModel {
     // MARK: - Input and Output
     struct Input {
-        let showCityListButtonTapped: AnyObserver<Void>
+        let showSavedLocationsButtonTapped: AnyObserver<Void>
         let addButtonTapped: AnyObserver<Void>
         let cancelTapped: AnyObserver<Void>
     }
@@ -24,7 +24,7 @@ final class WeatherViewModel {
         var minTemperatureValue: String
         var weatherDescription: String
         var iconImageURL: String
-        let showCityListButtonTappedDriver: Driver<Void>
+        let showSavedLocationsButtonTappedDriver: Driver<Void>
         let cancelDriver: Driver<Void>
     }
     
@@ -32,28 +32,28 @@ final class WeatherViewModel {
     let input: Input
     
     // MARK: - Private variables
-    private var city: City
+    private var location: Location
     private var weatherResponse: WeatherResponse
-    private var showCityListButtonTappedSubject = PublishSubject<Void>()
+    private var showSavedLocationsButtonTappedSubject = PublishSubject<Void>()
     private var addTappedSubject = PublishSubject<Void>()
-    private let cityDataManager: DatabaseCapable
+    private let locationDataManager: DatabaseCapable
     private let cancelTappedSubject = PublishSubject<Void>()
     private let disposeBag = DisposeBag()
     
     // MARK: - Instantiate
-    init(cityDataManager: DatabaseCapable, city: City, weatherResponse: WeatherResponse) {
+    init(locationDataManager: DatabaseCapable, location: Location, weatherResponse: WeatherResponse) {
         self.weatherResponse = weatherResponse
-        self.cityDataManager = cityDataManager
-        self.city = city
+        self.locationDataManager = locationDataManager
+        self.location = location
         output = Output(titleText: weatherResponse.name ?? "",
                         temperatureValue: "\(Int(weatherResponse.main?.temp ?? 0))°C",
                         maxTemperatureValue: "H: \(Int(weatherResponse.main?.temp_max ?? 0))°C",
                         minTemperatureValue: "L: \(Int(weatherResponse.main?.temp_min ?? 0))°C",
                         weatherDescription: "\(weatherResponse.weather?.first?.description ?? "")",
                         iconImageURL: weatherResponse.weather?.first?.iconImageURL ?? "",
-                        showCityListButtonTappedDriver: showCityListButtonTappedSubject.asDriverLogError(),
+                        showSavedLocationsButtonTappedDriver: showSavedLocationsButtonTappedSubject.asDriverLogError(),
                         cancelDriver: cancelTappedSubject.asDriverLogError())
-        input = Input(showCityListButtonTapped: showCityListButtonTappedSubject.asObserver(),
+        input = Input(showSavedLocationsButtonTapped: showSavedLocationsButtonTappedSubject.asObserver(),
                       addButtonTapped: addTappedSubject.asObserver(),
                       cancelTapped: cancelTappedSubject.asObserver())
         self.bindObservers()
@@ -63,12 +63,12 @@ final class WeatherViewModel {
         addTappedSubject.asObservable().subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             do {
-                try self.cityDataManager.saveCityData(self.city)
+                try self.locationDataManager.saveLocationData(self.location)
             } catch {
-                fatalError("Error in saving city: \(error.localizedDescription)")
+                fatalError("Error in saving location: \(error.localizedDescription)")
             }
             
-            self.showCityListButtonTappedSubject.onNext(())
+            self.showSavedLocationsButtonTappedSubject.onNext(())
         }).disposed(by: disposeBag)
     }
 }

@@ -86,7 +86,7 @@
                         <outlet property="iconImageView" destination="1s4-SI-Jr1" id="Oh1-Xr-3yL"/>
                         <outlet property="maxTemperatureLabel" destination="D7E-3O-QRf" id="Mr6-eB-Rss"/>
                         <outlet property="minTemperatureLabel" destination="aiz-QX-zJI" id="3xf-bK-HRG"/>
-                        <outlet property="showCityListButton" destination="Xva-1W-Bce" id="oiV-BB-mA6"/>
+                        <outlet property="showSavedLocationButton" destination="Xva-1W-Bce" id="oiV-BB-mA6"/>
                         <outlet property="temeratureDescriptionLabel" destination="8fr-6k-ac4" id="Nyz-GT-doM"/>
                         <outlet property="temperatureLabel" destination="dU5-Oh-1bi" id="Jr3-1k-wOh"/>
                     </connections>
@@ -95,15 +95,15 @@
             </objects>
             <point key="canvasLocation" x="839" y="-2"/>
         </scene>
-        <!--Favourite Cities View Controller-->
+        <!--Location Search View Controller-->
         <scene sceneID="Vyd-Sq-puv">
             <objects>
-                <viewController storyboardIdentifier="FavouriteCitiesViewController" id="pPU-01-tmQ" customClass="FavouriteCitiesViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LocationSearchViewController" id="pPU-01-tmQ" customClass="LocationSearchViewController" customModule="Weather" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4hD-hA-YYV">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" placeholder="City Name" translatesAutoresizingMaskIntoConstraints="NO" id="tmR-A7-Pg4">
+                            <searchBar contentMode="redraw" placeholder="Location Name" translatesAutoresizingMaskIntoConstraints="NO" id="tmR-A7-Pg4">
                                 <rect key="frame" x="0.0" y="59" width="393" height="56"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -180,8 +180,8 @@
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="mUT-UO-AGk" id="G8u-fa-Clg"/>
-                        <outlet property="favouriteCitiestableView" destination="jfb-iV-t7x" id="iGz-qi-zck"/>
                         <outlet property="loadingView" destination="8a2-jO-YFz" id="qFY-PY-Nd2"/>
+                        <outlet property="savedLocationsTableView" destination="jfb-iV-t7x" id="iGz-qi-zck"/>
                         <outlet property="searchBar" destination="tmR-A7-Pg4" id="mWd-Ul-ftg"/>
                         <outlet property="searchResultView" destination="V0L-33-Gyv" id="P53-gL-kJS"/>
                         <outlet property="searchResultsTableView" destination="zZT-WU-NXU" id="fQd-3b-Gg9"/>

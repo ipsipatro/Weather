@@ -1,5 +1,5 @@
 //
-//  CityWeather.swift
+//  LocationWeather.swift
 //  Weather
 //
 //  Created by Ipsi Patro on 14/03/2023.
@@ -8,12 +8,12 @@
 import Foundation
 
 struct WeatherResponse: Codable {
-    let weather: [CityWeather]?
+    let weather: [LocationWeather]?
     let name: String?
     let main: MainWeather?
 }
 
-struct CityWeather: Codable {
+struct LocationWeather: Codable {
     let description: String?
     let icon: String?
     

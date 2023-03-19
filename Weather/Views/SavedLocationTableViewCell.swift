@@ -1,5 +1,5 @@
 //
-//  FavouriteCityTableViewCell.swift
+//  SavedLocationTableViewCell.swift
 //  Weather
 //
 //  Created by Ipsi Patro on 16/03/2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FavouriteCityTableViewCell: UITableViewCell {
+class SavedLocationTableViewCell: UITableViewCell {
     // MARK: - Outlet
     @IBOutlet weak var TitleLabel: UILabel!
     
