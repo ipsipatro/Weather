@@ -18,7 +18,7 @@ enum APIError: Error, Equatable {
 }
 
 protocol HttpCommunicationCapable {
-    func fetchWeatcherReportFor(lat: Double, lon: Double) -> Single<WeatherResponse>
+    func fetchWeatherReportFor(_ lat: Double, lon: Double) -> Single<WeatherResponse>
 }
 
 final class HttpCommunicationManager: HttpCommunicationCapable {
@@ -31,8 +31,8 @@ final class HttpCommunicationManager: HttpCommunicationCapable {
         self.urlProvider = urlProvider
     }
     
-    func fetchWeatcherReportFor(lat: Double, lon: Double) -> Single<WeatherResponse> {
-        let weatherReportURL = urlProvider.weatherReportURL(lat: lat, lon: lon)
+    func fetchWeatherReportFor(_ lat: Double, lon: Double) -> Single<WeatherResponse> {
+        let weatherReportURL = urlProvider.weatherReportURL(lat, lon: lon)
         return communicationService.get(url: weatherReportURL)
             .map { data in
                 guard let data = data else {

@@ -19,7 +19,7 @@ struct LocationWeather: Codable {
     
     var iconImageURL: String? {
         guard let icon = icon else { return nil}
-        return Factory.urls.weatcherIconURLWith(id: icon)
+        return Factory.urls.weatcherIconURLWith(icon)
     }
 }
 

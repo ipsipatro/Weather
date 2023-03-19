@@ -165,7 +165,7 @@ final class LocationSearchViewModel {
     
     private func sendRequestWith(location: Location) {
         loadingStatusSubject.onNext(true)
-        httpService.fetchWeatcherReportFor(lat: location.latitude, lon: location.longitude).asObservable()
+        httpService.fetchWeatherReportFor(location.latitude, lon: location.longitude).asObservable()
             .materialize()
             .subscribe(onNext: { [weak self] event in
                 guard let self = self else { return }

@@ -8,7 +8,7 @@ import RxSwift
 @testable import Weather
 
 class HttpCommunicationManagerFake: HttpCommunicationCapable {
-    func fetchWeatcherReportFor(lat: Double, lon: Double) -> Single<Weather.WeatherResponse> {
+    func fetchWeatherReportFor(_ lat: Double, lon: Double) -> Single<WeatherResponse> {
         return Single.just(WeatherResponse(weather: [LocationWeather(description: "Sunny", icon: "04")], name: "Test Location", main: MainWeather(temp: 4.0, temp_min: 2.3, temp_max: 5.4)))
     }
 }

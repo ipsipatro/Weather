@@ -8,8 +8,8 @@
 import Foundation
 
 protocol URLProvideable {
-    func weatherReportURL(lat: Double, lon: Double) -> String
-    func weatcherIconURLWith(id: String) -> String
+    func weatherReportURL(_ lat: Double, lon: Double) -> String
+    func weatcherIconURLWith(_ id: String) -> String
 }
 
 final class URLFactory: URLProvideable {    
@@ -21,11 +21,11 @@ final class URLFactory: URLProvideable {
         return openWeatherAPIToken
     }
     
-    func weatherReportURL(lat: Double, lon: Double) -> String {
+    func weatherReportURL(_ lat: Double, lon: Double) -> String {
         return "https://api.openweathermap.org/data/2.5/weather?lat=\(Double(lat ))&lon=\(Double(lon))&appid=\(apiToken())&units=metric"
     }
     
-    func weatcherIconURLWith(id: String) -> String {
+    func weatcherIconURLWith(_ id: String) -> String {
         return "https://openweathermap.org/img/wn/\(id)@2x.png"
     }
 }
