@@ -49,24 +49,14 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5VW-cC-kio">
-                                <rect key="frame" x="20" y="756" width="56" height="56"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xva-1W-Bce">
+                                <rect key="frame" x="317" y="778" width="56" height="56"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="Ao9-oW-Dcn"/>
-                                    <constraint firstAttribute="width" constant="56" id="kfj-4M-W3B"/>
+                                    <constraint firstAttribute="height" constant="56" id="64o-mW-aWj"/>
+                                    <constraint firstAttribute="width" constant="56" id="f5H-4z-ArO"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="sideMenuHamburger" title=" "/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pQZ-WX-4Nk">
-                                <rect key="frame" x="317" y="756" width="56" height="56"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="56" id="H7P-WI-FSS"/>
-                                    <constraint firstAttribute="width" constant="56" id="bxe-a7-nsN"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="tintColor"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system" title=" "/>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lff-Sz-qSQ"/>
@@ -75,7 +65,6 @@
                             <constraint firstItem="dU5-Oh-1bi" firstAttribute="top" secondItem="1s4-SI-Jr1" secondAttribute="bottom" constant="2" id="52R-DS-MAb"/>
                             <constraint firstItem="8fr-6k-ac4" firstAttribute="leading" secondItem="lff-Sz-qSQ" secondAttribute="leading" constant="20" id="6SA-0r-Ezc"/>
                             <constraint firstItem="dU5-Oh-1bi" firstAttribute="leading" secondItem="lff-Sz-qSQ" secondAttribute="leading" constant="20" id="73O-Bp-5CP"/>
-                            <constraint firstAttribute="bottom" secondItem="pQZ-WX-4Nk" secondAttribute="bottom" constant="40" id="GRj-86-wj9"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="D7E-3O-QRf" secondAttribute="trailing" constant="20" id="HMD-BN-PgM"/>
                             <constraint firstItem="D7E-3O-QRf" firstAttribute="top" secondItem="8fr-6k-ac4" secondAttribute="bottom" constant="20" id="Hpl-rT-seO"/>
                             <constraint firstItem="8fr-6k-ac4" firstAttribute="top" secondItem="dU5-Oh-1bi" secondAttribute="bottom" constant="20" id="Iz9-2E-MM6"/>
@@ -84,22 +73,20 @@
                             <constraint firstItem="aiz-QX-zJI" firstAttribute="leading" secondItem="lff-Sz-qSQ" secondAttribute="leading" constant="20" id="OpF-Fx-6Rz"/>
                             <constraint firstItem="1s4-SI-Jr1" firstAttribute="top" secondItem="lff-Sz-qSQ" secondAttribute="top" constant="40" id="TcS-W7-L68"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="8fr-6k-ac4" secondAttribute="trailing" constant="20" id="Xi3-eQ-PQ0"/>
+                            <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="Xva-1W-Bce" secondAttribute="trailing" constant="20" id="Yiz-jb-3Zc"/>
                             <constraint firstItem="aiz-QX-zJI" firstAttribute="top" secondItem="D7E-3O-QRf" secondAttribute="bottom" constant="5" id="ZNG-CS-5iP"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="aiz-QX-zJI" secondAttribute="trailing" constant="20" id="cy4-z1-bZL"/>
-                            <constraint firstItem="5VW-cC-kio" firstAttribute="leading" secondItem="lff-Sz-qSQ" secondAttribute="leading" constant="20" id="hSP-xK-PiN"/>
-                            <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="pQZ-WX-4Nk" secondAttribute="trailing" constant="20" id="myH-OE-wyr"/>
+                            <constraint firstItem="lff-Sz-qSQ" firstAttribute="bottom" secondItem="Xva-1W-Bce" secondAttribute="top" constant="40" id="jYr-H7-8uU"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="dU5-Oh-1bi" secondAttribute="trailing" constant="20" id="qXk-g5-lVM"/>
                             <constraint firstItem="D7E-3O-QRf" firstAttribute="leading" secondItem="lff-Sz-qSQ" secondAttribute="leading" constant="20" id="qlK-vC-bLk"/>
-                            <constraint firstAttribute="bottom" secondItem="5VW-cC-kio" secondAttribute="bottom" constant="40" id="sWj-6a-HFQ"/>
                             <constraint firstItem="lff-Sz-qSQ" firstAttribute="trailing" secondItem="D7E-3O-QRf" secondAttribute="trailing" constant="20" id="yk3-l2-dIz"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="addButton" destination="pQZ-WX-4Nk" id="Nor-Iw-Z8f"/>
                         <outlet property="iconImageView" destination="1s4-SI-Jr1" id="Oh1-Xr-3yL"/>
                         <outlet property="maxTemperatureLabel" destination="D7E-3O-QRf" id="Mr6-eB-Rss"/>
                         <outlet property="minTemperatureLabel" destination="aiz-QX-zJI" id="3xf-bK-HRG"/>
-                        <outlet property="showCityListButton" destination="5VW-cC-kio" id="PeI-PD-mH3"/>
+                        <outlet property="showCityListButton" destination="Xva-1W-Bce" id="oiV-BB-mA6"/>
                         <outlet property="temeratureDescriptionLabel" destination="8fr-6k-ac4" id="Nyz-GT-doM"/>
                         <outlet property="temperatureLabel" destination="dU5-Oh-1bi" id="Jr3-1k-wOh"/>
                     </connections>
@@ -206,7 +193,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="plus" catalog="system" width="128" height="113"/>
         <image name="sideMenuHamburger" width="27" height="24"/>
         <namedColor name="Grayscale_60">
             <color red="0.81199997663497925" green="0.85900002717971802" blue="0.90200001001358032" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -219,9 +205,6 @@
         </systemColor>
         <systemColor name="systemGray4Color">
             <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

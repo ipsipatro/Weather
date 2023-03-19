@@ -38,8 +38,6 @@ class FavouriteCitiesViewController: UIViewController {
     // MARK: - UI
     private func configureUI() {
         self.navigationItem.setHidesBackButton(true, animated: true)
-        searchCompleter.delegate = self
-        searchBar?.delegate = self
         self.searchResultView.isHidden = true
         self.loadingView.isHidden = true
         self.title = "Weather"
@@ -56,6 +54,8 @@ class FavouriteCitiesViewController: UIViewController {
             assertionFailure("Missing TradingAccountsListViewModel")
             return
         }
+        searchCompleter.delegate = self
+        searchBar?.delegate = self
         
         self.searchResultsTableView.register(UINib(nibName: CustomCityNameTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: CustomCityNameTableViewCell.reuseIdentifier)
         

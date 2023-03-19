@@ -16,17 +16,27 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var maxTemperatureLabel: UILabel!
     @IBOutlet weak var temeratureDescriptionLabel: UILabel!
     @IBOutlet weak var showCityListButton: UIButton!
-    @IBOutlet weak var addButton: UIButton!
     
     // MARK: - Private variables
     private var viewModel: WeatherViewModel?
+    private var addBarButtonItem: UIBarButtonItem?
+    private var cancelBarButtonItem: UIBarButtonItem?
     private let disposeBag = DisposeBag()
     
     // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.setHidesBackButton(true, animated: true)
+        configureUI()
         bind()
+    }
+    // MARK: - UI
+    private func configureUI() {
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        addBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
+        navigationItem.rightBarButtonItem = addBarButtonItem
+
+        cancelBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: nil)
+        navigationItem.leftBarButtonItem = cancelBarButtonItem
     }
     
     // MARK: - Binding
@@ -54,9 +64,13 @@ class WeatherViewController: UIViewController {
         
         guard let url = URL(string:viewModel.output.iconImageURL) else { return }
         self.iconImageView.load(url: url)
-        
-        self.addButton?.rx.tap.asObservable()
+
+        self.addBarButtonItem?.rx.tap.asObservable()
             .subscribe(viewModel.input.addButtonTapped)
+            .disposed(by: disposeBag)
+        
+        self.cancelBarButtonItem?.rx.tap.asObservable()
+            .subscribe(viewModel.input.cancelTapped)
             .disposed(by: disposeBag)
 
     }

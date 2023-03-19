@@ -52,6 +52,10 @@ class MainCoordinator: Coordinator {
             guard let self = self else { return }
             self.showFavouriteCitiesScreen(showCityListButtonTapped: true)
         }).disposed(by: disposeBag)
+        
+        weatherViewModel.output.cancelDriver.drive(onNext: { [weak self] _ in
+            self?.navigationController.popViewController(animated: true)
+        }).disposed(by: disposeBag)
 
     }
 }
