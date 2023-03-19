@@ -1,5 +1,5 @@
 //
-//  CityDetailsProvider.swift
+//  CityDataManager.swift
 //  Weather
 //
 //  Created by Ipsi Patro on 15/03/2023.
@@ -8,32 +8,100 @@
 import Foundation
 import RealmSwift
 
-class CityDataManager {
-    var realm: Realm = try! Realm()
+protocol DatabaseCapable {
+    func getAllSavedCities() throws -> Results<City>
+    func saveCityData(_ city: City) throws
+    func updateLastTappedForCity(_ cityName: String) throws
+    func deleteCityData(_ city: City) throws
+    func getLastTappedCity() throws -> City?
+    func makeNewCity(name: String, latitude: Double, longitude: Double ) -> City
+}
+
+enum RuntimeError: Error {
+    case NoRealmSet
+}
+
+class CityDataManager: DatabaseCapable {
+    var realm: Realm?
     var lastTappedCity: City?
     
+    // MARK: - Instantiate
+    init(_ realm: Realm) {
+        self.realm = realm
+    }
     
-    public func saveCityDetails(_ city: City) {
-        try! realm.write {
-            realm.add(city)
+    func saveCityData(_ city: City) throws {
+        if (realm != nil) {
+            guard let city = realm!.objects(City.self).filter("name == %@", city.name).first else {
+                // Add the city to the list if not present
+                try! realm!.write {
+                    realm!.add(city)
+                }
+                return
+            }
+            // Update the lastTapped property to the current date
+            try! realm!.write {
+                city.lastTapped = Date()
+            }
+        } else {
+            throw RuntimeError.NoRealmSet
         }
     }
     
-    func getAllObjects<T: Object>(_ objectType: City.Type) -> Results<T> {
-        let objects = realm.objects(T.self)
-        return objects
+    func updateLastTappedForCity(_ cityName: String) throws {
+        let city = try findCityByField("name", value: cityName)
+        try! realm!.write {
+            city.setValue(Date(), forKey: "lastTapped")
+        }
     }
     
-    public func findCityByName(_ name: String) -> Results<City> {
-        let predicate = NSPredicate(format: "name = %@", name)
-        return realm.objects(City.self).filter(predicate)
+    private func findCityByField(_ field: String, value: String) throws -> Results<City> {
+        if (realm != nil) {
+            let predicate = NSPredicate(format: "%K = %@", field, value)
+            return realm!.objects(City.self).filter(predicate)
+        } else {
+            throw RuntimeError.NoRealmSet
+        }
     }
     
-    public func makeNewCity(_ name: String, latitude: Double, longitude: Double ) -> City {
+    func deleteCityData(_ city: City) throws {
+        if (realm != nil) {
+            guard let targetCity = realm!.objects(City.self).filter("name == %@", city.name).first else {
+                return
+            }
+            try! realm!.write {
+                realm!.delete(targetCity)
+            }
+        } else {
+            throw RuntimeError.NoRealmSet
+        }
+    }
+    
+    func getLastTappedCity() throws -> City? {
+        if (realm != nil) {
+            let lastTappedCity = realm!.objects(City.self).filter("lastTapped != nil").sorted(byKeyPath: "lastTapped", ascending: false).first
+            
+            return lastTappedCity
+        } else {
+            throw RuntimeError.NoRealmSet
+        }
+    }
+    
+    func getAllSavedCities() throws -> Results<City> {
+        if (realm != nil) {
+            let objects = realm!.objects(City.self)
+            return objects
+        } else {
+            throw RuntimeError.NoRealmSet
+        }
+    }
+    
+    func makeNewCity(name: String, latitude: Double, longitude: Double ) -> City {
         let newCity = City()
         newCity.name = name
         newCity.latitude = latitude
         newCity.longitude = longitude
+        newCity.lastTapped = Date()
         return newCity
     }
 }

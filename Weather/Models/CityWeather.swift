@@ -6,3 +6,25 @@
 //
 
 import Foundation
+
+struct WeatherResponse: Codable {
+    let weather: [CityWeather]?
+    let name: String?
+    let main: MainWeather?
+}
+
+struct CityWeather: Codable {
+    let description: String?
+    let icon: String?
+    
+    var iconImageURL: String? {
+        guard let icon = icon else { return nil}
+        return Factory.urls.weatcherIconURLWith(id: icon)
+    }
+}
+
+struct MainWeather: Codable {
+    let temp: Double?
+    let temp_min: Double?
+    let temp_max: Double?
+}

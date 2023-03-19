@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum Factory {
+    static let views = ViewFactory()
+    static let urls = URLFactory()
+}

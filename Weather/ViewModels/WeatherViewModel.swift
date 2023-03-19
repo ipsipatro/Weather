@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 
 final class WeatherViewModel {
+    // MARK: - Input and Output
     struct Input {
         let showCityListButtonTapped: AnyObserver<Void>
         let addButtonTapped: AnyObserver<Void>
@@ -39,15 +40,15 @@ final class WeatherViewModel {
     private let cancelTappedSubject = PublishSubject<Void>()
     private let disposeBag = DisposeBag()
     
-
+    // MARK: - Instantiate
     init(cityDataManager: DatabaseCapable, city: City, weatherResponse: WeatherResponse) {
         self.weatherResponse = weatherResponse
         self.cityDataManager = cityDataManager
         self.city = city
         output = Output(titleText: weatherResponse.name ?? "",
-                        temperatureValue: "\(weatherResponse.main?.temp ?? 0)°C",
-                        maxTemperatureValue: "H: \(weatherResponse.main?.temp_max ?? 0)°C",
-                        minTemperatureValue: "L: \(weatherResponse.main?.temp_min ?? 0)°C",
+                        temperatureValue: "\(Int(weatherResponse.main?.temp ?? 0))°C",
+                        maxTemperatureValue: "H: \(Int(weatherResponse.main?.temp_max ?? 0))°C",
+                        minTemperatureValue: "L: \(Int(weatherResponse.main?.temp_min ?? 0))°C",
                         weatherDescription: "\(weatherResponse.weather?.first?.description ?? "")",
                         iconImageURL: weatherResponse.weather?.first?.iconImageURL ?? "",
                         showCityListButtonTappedDriver: showCityListButtonTappedSubject.asDriverLogError(),
@@ -61,7 +62,12 @@ final class WeatherViewModel {
     private func bindObservers() {
         addTappedSubject.asObservable().subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
-            self.cityDataManager.saveCityData(self.city)
+            do {
+                try self.cityDataManager.saveCityData(self.city)
+            } catch {
+                fatalError("Error in saving city: \(error.localizedDescription)")
+            }
+            
             self.showCityListButtonTappedSubject.onNext(())
         }).disposed(by: disposeBag)
     }

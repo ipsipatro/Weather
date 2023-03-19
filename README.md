@@ -3,4 +3,4 @@ This is a sample project to fetch current weather report. I have created this pr
 
 ## Getting Started
 
-First install pods and then open the .xcworkspace file in Xcode to run the app.
+First install pods and then select on the .xcworkspace file to open the project in xcode to run the app.
