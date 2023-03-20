@@ -1,5 +1,5 @@
 //
-//  FavouriteCitiesViewController.swift
+//  LocationSearchViewController.swift
 //  Weather
 //
 //  Created by Ipsi Patro on 16/03/2023.
@@ -70,7 +70,7 @@ class LocationSearchViewController: UIViewController {
         self.savedLocationsTableView.register(UINib(nibName: SavedLocationTableViewCell.reuseIdentifier, bundle: nil), forCellReuseIdentifier: SavedLocationTableViewCell.reuseIdentifier)
         
         viewModel.output.savedLocationsDataSource
-            .bind(to: savedLocationsTableView.rx.items(dataSource: favouritecitiesDataSource))
+            .bind(to: savedLocationsTableView.rx.items(dataSource: savedLocationsDataSource))
             .disposed(by: disposeBag)
         
         savedLocationsTableView.rx.itemSelected
@@ -130,7 +130,7 @@ class LocationSearchViewController: UIViewController {
         })
     }
     
-    private var favouritecitiesDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, SavedLocationCellModel>> {
+    private var savedLocationsDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, SavedLocationCellModel>> {
         return RxTableViewSectionedReloadDataSource<SectionModel<String, SavedLocationCellModel>>(configureCell: { _, tableView, indexPath, viewModel -> UITableViewCell in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SavedLocationTableViewCell.reuseIdentifier, for: indexPath) as? SavedLocationTableViewCell else {
                 assertionFailure("Missing SavedLocationTableViewCell")

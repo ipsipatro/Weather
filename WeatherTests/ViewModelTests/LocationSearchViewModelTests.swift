@@ -1,5 +1,5 @@
 //
-//  FavouriteCitiesViewModelTests.swift
+//  LocationSearchViewModelTests.swift
 //  WeatherTests
 //
 //  Created by Ipsi Patro on 18/03/2023.
@@ -18,7 +18,7 @@ class LocationSearchViewModelTests: QuickSpec {
     override func spec() {
         super.spec()
         
-        describe("Favourite Cities ViewModel") {
+        describe("Location Search ViewModel tests") {
             var scheduler: TestScheduler!
             var subject: LocationSearchViewModel!
             var fakeHTTPCommunication: HttpCommunicationManagerFake!

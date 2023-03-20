@@ -13,8 +13,20 @@ import RxSwift
 enum APIError: Error, Equatable {
     case emptyResponse
     case failedToDecode
-    case invalidResponse(message: String)
     case unknown
+}
+
+extension APIError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .emptyResponse:
+            return NSLocalizedString("Response received is empty", comment: "API Error")
+        case .failedToDecode:
+            return NSLocalizedString("Failed to decode response", comment: "API Error")
+        case .unknown:
+            return NSLocalizedString("An error occured", comment: "API Error")
+        }
+    }
 }
 
 protocol HttpCommunicationCapable {

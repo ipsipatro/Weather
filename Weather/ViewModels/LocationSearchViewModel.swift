@@ -1,5 +1,5 @@
 //
-//  FavouriteCitiesViewModel.swift
+//  LocationSearchViewModel.swift
 //  Weather
 //
 //  Created by Ipsi Patro on 16/03/2023.

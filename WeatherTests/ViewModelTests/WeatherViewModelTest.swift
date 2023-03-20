@@ -18,7 +18,7 @@ class WeatherViewModelTest: QuickSpec {
     override func spec() {
         super.spec()
         
-        describe("Weather View Model") {
+        describe("Weather View Model Tests") {
             var scheduler: TestScheduler!
             var locationDataManagerFake: LocationDataManagerFake!
             var testLocation: Location!
@@ -45,24 +45,24 @@ class WeatherViewModelTest: QuickSpec {
                     expect(subject.output.titleText).to(equal("Test Location"))
                 }
                 
-                it("test temp values with right formatting") {
+                it("test setting temp values with right formatting") {
                     // Assert
                     expect(subject.output.temperatureValue).to(equal("1°C"))
                     expect(subject.output.minTemperatureValue).to(equal("L: 0°C"))
                     expect(subject.output.maxTemperatureValue).to(equal("H: 2°C"))
                 }
                 
-                it("test weather decription") {
+                it("test setting weather decription") {
                     // Assert
                     expect(subject.output.weatherDescription).to(equal("Sunny"))
                 }
                 
-                it("test weather icon url") {
+                it("test setting weather icon url") {
                     // Assert
                     expect(subject.output.iconImageURL).to(equal("https://openweathermap.org/img/wn/04@2x.png"))
                 }
                 
-                it("test showSavedLocationsButtonTapped action") {
+                it("test setting showSavedLocationsButtonTapped action") {
                     // Arrange
                     let observer = scheduler.createObserver(Void.self)
                     subject.output.showSavedLocationsButtonTappedDriver.drive(observer).disposed(by: bag)
@@ -82,7 +82,7 @@ class WeatherViewModelTest: QuickSpec {
                     expect(locationDataManagerFake.saveLocationDataCalled) == true
                 }
                 
-                it("test cancel button tapped") {
+                it("test cancel button tapped action") {
                     // Arrange
                     let observer = scheduler.createObserver(Void.self)
                     subject.output.cancelDriver.drive(observer).disposed(by: bag)

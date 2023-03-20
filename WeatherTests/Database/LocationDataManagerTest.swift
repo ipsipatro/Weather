@@ -46,7 +46,7 @@ class LocationDataManagerTest: QuickSpec {
                 it("test update tapped data to database and fetch last tapped location") {
                     do {
                         // Arrange
-                        // Save two new cities to the database
+                        // Save two new locations to the database
                         identifier = "Test two"
                         let firstLocation = locationDataManager.makeANewLocationWith("First Location", latitude: 0.0, longitude: 0.0)
                         let secondLocation = locationDataManager.makeANewLocationWith("Second Location", latitude: 0.0, longitude: 0.0)
@@ -88,9 +88,7 @@ class LocationDataManagerTest: QuickSpec {
                         XCTAssert(false, "Unexpected error \(error)")
                     }
                 }
-                
             }
-            
         }
     }
 }
