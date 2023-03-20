@@ -13,27 +13,27 @@ class LocationDataManagerFake: DatabaseCapable {
     private(set) var saveLocationDataCalled = false
     private(set) var deleteLocationObjectCalled = false
     
-    func saveLocationData(_ location: Weather.Location) throws {
+    func saveLocationData(_ location: Location) throws {
         saveLocationDataCalled = true
     }
     
     func updateLastTappedForLocation(_ locationName: String) throws {
     }
     
-    func deleteLocationData(_ location: Weather.Location) throws {
+    func deleteLocationData(_ location: Location) throws {
         deleteLocationObjectCalled = true
     }
     
-    func getLastTappedLocation() throws -> Weather.Location? {
+    func getLastTappedLocation() throws -> Location? {
         return nil
     }
     
-    func getAllSavedLocations() throws -> RealmSwift.Results<Weather.Location> {
+    func getAllSavedLocations() throws -> RealmSwift.Results<Location> {
         let realm = try! Realm()
         return realm.objects(Location.self)
     }
     
-    func makeANewLocationWith(_ name: String, latitude: Double, longitude: Double) -> Weather.Location {
+    func makeANewLocationWith(_ name: String, latitude: Double, longitude: Double) -> Location {
         return Location()
     }
 }

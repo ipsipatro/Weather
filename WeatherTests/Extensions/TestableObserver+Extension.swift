@@ -30,3 +30,10 @@ extension TestableObserver {
         expect(file: file, line: line, that( self.elements[index])) == true
     }
 }
+
+extension TestableObserver where Element: Equatable {
+    
+    func assertValues(_ values: Element..., file: String = #file, line: UInt = #line) {
+        expect(file: file, line: line, self.elements) == values
+    }
+}

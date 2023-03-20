@@ -40,29 +40,29 @@ class WeatherViewModelTest: QuickSpec {
                     subject = WeatherViewModel(locationDataManager: locationDataManagerFake, location: testLocation, weatherResponse: weatherResponse)
                 }
                 
-                it("outputs location name as titleText") {
+                it("test setting location name as titleText") {
                     // Assert
                     expect(subject.output.titleText).to(equal("Test Location"))
                 }
                 
-                it("outputs correct temp values with right formatting") {
+                it("test temp values with right formatting") {
                     // Assert
                     expect(subject.output.temperatureValue).to(equal("1°C"))
                     expect(subject.output.minTemperatureValue).to(equal("L: 0°C"))
                     expect(subject.output.maxTemperatureValue).to(equal("H: 2°C"))
                 }
                 
-                it("outputs correct location weather decription") {
+                it("test weather decription") {
                     // Assert
                     expect(subject.output.weatherDescription).to(equal("Sunny"))
                 }
                 
-                it("outputs correct location weather icon url") {
+                it("test weather icon url") {
                     // Assert
                     expect(subject.output.iconImageURL).to(equal("https://openweathermap.org/img/wn/04@2x.png"))
                 }
                 
-                it("drives showSavedLocationsButtonTappedDriver output") {
+                it("test showSavedLocationsButtonTapped action") {
                     // Arrange
                     let observer = scheduler.createObserver(Void.self)
                     subject.output.showSavedLocationsButtonTappedDriver.drive(observer).disposed(by: bag)
@@ -74,12 +74,24 @@ class WeatherViewModelTest: QuickSpec {
                     observer.assertValueCount(1)
                 }
                 
-                it("drives add output") {
+                it("test saving location on button tapped") {
                     // Act
                     subject.input.addButtonTapped.onNext(())
                     
                     // Assert
                     expect(locationDataManagerFake.saveLocationDataCalled) == true
+                }
+                
+                it("test cancel button tapped") {
+                    // Arrange
+                    let observer = scheduler.createObserver(Void.self)
+                    subject.output.cancelDriver.drive(observer).disposed(by: bag)
+                    
+                    // Act
+                    subject.input.cancelTapped.onNext(())
+                    
+                    // Assert
+                    observer.assertValueCount(1)
                 }
             }
         }
