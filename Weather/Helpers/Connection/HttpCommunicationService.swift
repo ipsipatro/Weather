@@ -13,7 +13,10 @@ protocol HttpCommunicationServiceable {
     func get(url: String) -> Single<Data?>
 }
 
+// This class contains methods to send actual api request
 final class HttpCommunicationService: HttpCommunicationServiceable {
+    
+    // get api request
     func get(url: String) -> Single<Data?> {
         return Single<Data?>.create { subscription in
             

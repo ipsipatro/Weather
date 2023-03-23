@@ -13,6 +13,7 @@ import MapKit
 
 final class LocationSearchViewModel {
     // MARK: - Input and Output
+    // This is a Input class for the view model, users of this class can send inputs using these properties
     struct Input {
         var selectedLocationStream: AnyObserver<(String, Double, Double)>
         var searchResultsStream: AnyObserver<[MKLocalSearchCompletion]>
@@ -21,6 +22,7 @@ final class LocationSearchViewModel {
         var itemDeleted: AnyObserver<IndexPath>
     }
     
+    // This is a Output class for the view model, view model will send outputs using it's properties
     struct Output {
         var didReciveLocationWeather: Driver<(Location, WeatherResponse)>
         var searchResultsDataSource: Observable<[SectionModel<String, LocationCellModel>]>
@@ -68,7 +70,7 @@ final class LocationSearchViewModel {
                         searchForResultDriver: searchForResultSubject.asDriverLogError(),
                         loadingStatusDriver: loadingStatusSubject.asDriverLogError())
         
-        bindObservers()
+        setupBinding()
         buildDataSource()
         
         if(!showSavedLocationsButtonTapped) {
@@ -77,13 +79,15 @@ final class LocationSearchViewModel {
     }
     
     // MARK: - Private methods
-    private func bindObservers() {
-        // Bind observers for serch results
+    // This method is going to be used to handle the input bindings
+    private func setupBinding() {
+        // Bind observers for search results
         selectedLocationSubject.asObservable().subscribe(onNext: { [weak self] (name, lat, lon) in
             guard let self = self else { return }
-            self.sendRequestWith(location: self.locationDataManager.makeANewLocationWith(name, latitude: lat, longitude: lon))
+            self.fetchWeatherReportFor(location: self.locationDataManager.makeANewLocationWith(name, latitude: lat, longitude: lon))
         }).disposed(by: disposeBag)
         
+        // Bind observers for search item selected from serch results table view cell
         self.searchItemSelectedSubject.asObservable()
             .withLatestFrom(self.searchResultsDataSourceRelay.asObservable()) { (indexPath, dataSource) -> MKLocalSearchCompletion in
                 let selectedItem = dataSource[indexPath.section].items[indexPath.row]
@@ -94,7 +98,7 @@ final class LocationSearchViewModel {
             })
             .disposed(by: disposeBag)
         
-        // bind observers for saved locations
+        // Bind observers for saved locations selection
         self.savedLocationSelectedSubject.asObservable()
             .withLatestFrom(self.savedLocationsDataSourceRelay.asObservable()) { (indexPath, dataSource) -> Location in
                 let selectedItem = dataSource[indexPath.section].items[indexPath.row]
@@ -106,11 +110,11 @@ final class LocationSearchViewModel {
                 } catch {
                     fatalError("Error in saving location: \(error.localizedDescription)")
                 }
-                self?.sendRequestWith(location: Location(value: location))
+                self?.fetchWeatherReportFor(location: Location(value: location))
             })
             .disposed(by: disposeBag)
         
-        // bind observers for deleting object
+        // bind observers for deleting saved locations
         itemDeletedSubject.asObservable()
             .withLatestFrom(self.savedLocationsDataSourceRelay.asObservable()) { (indexPath, dataSource) -> Location in
                 let selectedItem = dataSource[indexPath.section].items[indexPath.row]
@@ -141,6 +145,7 @@ final class LocationSearchViewModel {
         getSavedLocationsDataSource()
     }
     
+    // This method is to fetch the saved locations in the device
     private func getSavedLocationsDataSource() {
         do {
             let savedLocations = try locationDataManager.getAllSavedLocations()
@@ -153,17 +158,19 @@ final class LocationSearchViewModel {
         }
     }
     
+    // This method is to fetch last tapped location to show it's weather details without selection
     private func showLastTappedLocationWeather() {
         do {
             guard let lastTappedLocation = try locationDataManager.getLastTappedLocation() else { return }
             try self.locationDataManager.saveLocationData(lastTappedLocation)
-            self.sendRequestWith(location: lastTappedLocation)
+            self.fetchWeatherReportFor(location: lastTappedLocation)
         } catch {
             fatalError("Error in deleting location: \(error.localizedDescription)")
         }
     }
     
-    private func sendRequestWith(location: Location) {
+    // This method is to send api request to fetch weather details
+    private func fetchWeatherReportFor(location: Location) {
         loadingStatusSubject.onNext(true)
         httpService.fetchWeatherReportFor(location.latitude, lon: location.longitude).asObservable()
             .materialize()

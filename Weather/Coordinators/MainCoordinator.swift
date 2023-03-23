@@ -35,6 +35,7 @@ class MainCoordinator: Coordinator {
         navigationController.pushViewController(locationSearchViewController, animated: false)
         locationSearchViewController.bind(viewModel: locationSearchViewModel)
         
+        // This is to handle weather report repose received
         locationSearchViewModel.output.didReciveLocationWeather.drive(onNext: { [weak self] (location, weatherResponse) in
             guard let self = self else { return }
             self.showWeatherReport(location: location, weatherResponse: weatherResponse)
@@ -48,11 +49,13 @@ class MainCoordinator: Coordinator {
         weatherViewController.bind(viewModel: weatherViewModel)
         navigationController.pushViewController(weatherViewController, animated: false)
         
+        // This is to handle saved location button tap
         weatherViewModel.output.showSavedLocationsButtonTappedDriver.drive(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.showLocationSearchScreen(showSavedLocationsButtonTapped: true)
         }).disposed(by: disposeBag)
         
+        // This is to handle cancel button tap
         weatherViewModel.output.cancelDriver.drive(onNext: { [weak self] _ in
             self?.navigationController.popViewController(animated: true)
         }).disposed(by: disposeBag)

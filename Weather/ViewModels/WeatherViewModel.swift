@@ -11,12 +11,14 @@ import RxCocoa
 
 final class WeatherViewModel {
     // MARK: - Input and Output
+    // This is a Input class for the view model, users of this class can send inputs using these properties
     struct Input {
         let showSavedLocationsButtonTapped: AnyObserver<Void>
         let addButtonTapped: AnyObserver<Void>
         let cancelTapped: AnyObserver<Void>
     }
     
+    // This is a Output class for the view model, view model will send outputs using it's properties
     struct Output {
         var titleText: String
         var temperatureValue: String
@@ -56,10 +58,11 @@ final class WeatherViewModel {
         input = Input(showSavedLocationsButtonTapped: showSavedLocationsButtonTappedSubject.asObserver(),
                       addButtonTapped: addTappedSubject.asObserver(),
                       cancelTapped: cancelTappedSubject.asObserver())
-        self.bindObservers()
+        self.setupBinding()
     }
     
-    private func bindObservers() {
+    // This method is going to be used to handle the inputs
+    private func setupBinding() {
         addTappedSubject.asObservable().subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             do {

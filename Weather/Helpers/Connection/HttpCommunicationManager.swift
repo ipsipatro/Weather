@@ -20,11 +20,11 @@ extension APIError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .emptyResponse:
-            return NSLocalizedString("Response received is empty", comment: "API Error")
+            return NSLocalizedString(Constants.emptyResponseErrorMessage, comment: Constants.apiError)
         case .failedToDecode:
-            return NSLocalizedString("Failed to decode response", comment: "API Error")
+            return NSLocalizedString(Constants.failedToDecodeErrorMessage, comment: Constants.apiError)
         case .unknown:
-            return NSLocalizedString("An error occured", comment: "API Error")
+            return NSLocalizedString(Constants.unknownErrorMessage, comment: Constants.apiError)
         }
     }
 }

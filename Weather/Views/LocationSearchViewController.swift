@@ -38,13 +38,11 @@ class LocationSearchViewController: UIViewController {
     // MARK: - UI
     private func configureUI() {
         self.navigationItem.setHidesBackButton(true, animated: true)
+        // Hide the serch results table view when loading first time
         self.searchResultView.isHidden = true
+        // Hide the loading view when loading first time
         self.loadingView.isHidden = true
-        self.title = "Weather"
-        savedLocationsTableView.rowHeight = UITableView.automaticDimension
-        savedLocationsTableView.estimatedRowHeight = 300
-        self.navigationItem.backButtonTitle = ""
-        
+        self.title = Constants.weatherTitle
         handleLoadingView()
     }
     
@@ -93,8 +91,8 @@ class LocationSearchViewController: UIViewController {
         }).disposed(by: disposeBag)
         
         viewModel.output.showPopupDriver.drive(onNext: { [weak self] message in
-            let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
+            let alert = UIAlertController(title: Constants.alertTitle, message: message, preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: Constants.okTitle, style: .cancel, handler: nil))
             self?.present(alert, animated: true, completion: nil)
         }).disposed(by: disposeBag)
     }
@@ -104,6 +102,7 @@ class LocationSearchViewController: UIViewController {
     }
     
     // MARK: - Private methods
+    // Show and hide the loading views driven by view model
     private func handleLoadingView() {
         self.activityIndicator?.style = .medium
         //Show and Hide loading
@@ -119,6 +118,7 @@ class LocationSearchViewController: UIViewController {
             }).disposed(by: disposeBag)
     }
     
+    // Search results tableView data source binding
     private var searchResultsDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, LocationCellModel>> {
         return RxTableViewSectionedReloadDataSource<SectionModel<String, LocationCellModel>>(configureCell: { _, tableView, indexPath, viewModel -> UITableViewCell in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: LocationTableViewCell.reuseIdentifier, for: indexPath) as? LocationTableViewCell else {
@@ -130,6 +130,7 @@ class LocationSearchViewController: UIViewController {
         })
     }
     
+    // Saved loactions tableView data source binding
     private var savedLocationsDataSource: RxTableViewSectionedReloadDataSource<SectionModel<String, SavedLocationCellModel>> {
         return RxTableViewSectionedReloadDataSource<SectionModel<String, SavedLocationCellModel>>(configureCell: { _, tableView, indexPath, viewModel -> UITableViewCell in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SavedLocationTableViewCell.reuseIdentifier, for: indexPath) as? SavedLocationTableViewCell else {
@@ -141,6 +142,7 @@ class LocationSearchViewController: UIViewController {
         })
     }
     
+    // Method to fetch details of tapped search location
     private func searchForResult(_ result: MKLocalSearchCompletion) {
         let searchRequest = MKLocalSearch.Request(completion: result)
         
@@ -158,6 +160,7 @@ class LocationSearchViewController: UIViewController {
     }
 }
 
+// MARK: - UISearchBarDelegate
 extension LocationSearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchCompleter.queryFragment = searchText
@@ -171,6 +174,7 @@ extension LocationSearchViewController: UISearchBarDelegate {
     }
 }
 
+// MARK: - MKLocalSearchCompleterDelegate
 extension LocationSearchViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         searchResults = completer.results

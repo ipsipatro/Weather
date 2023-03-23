@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		170D9C0529CB4DBD00A15042 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170D9C0429CB4DBD00A15042 /* Constants.swift */; };
 		1729366129C38EFA0024B8DD /* LocationCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1729366029C38EFA0024B8DD /* LocationCellModel.swift */; };
 		172936AE29C4FC2D0024B8DD /* WeatherViewModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172936AD29C4FC2D0024B8DD /* WeatherViewModelTest.swift */; };
 		172936B029C5846E0024B8DD /* TestableObserver+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172936AF29C5846E0024B8DD /* TestableObserver+Extension.swift */; };
@@ -67,6 +68,7 @@
 
 /* Begin PBXFileReference section */
 		0118268B0F67A77F0105C12B /* Pods_WeatherTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		170D9C0429CB4DBD00A15042 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		1729366029C38EFA0024B8DD /* LocationCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationCellModel.swift; sourceTree = "<group>"; };
 		172936AD29C4FC2D0024B8DD /* WeatherViewModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModelTest.swift; sourceTree = "<group>"; };
 		172936AF29C5846E0024B8DD /* TestableObserver+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestableObserver+Extension.swift"; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				17B0BBAF29BF64D000B08EA7 /* Factory.swift */,
 				17B0BBB129BF651F00B08EA7 /* ViewFactory.swift */,
 				17F20D9229C0848D00971F42 /* URLFactory.swift */,
+				170D9C0429CB4DBD00A15042 /* Constants.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -634,6 +637,7 @@
 				178638CB29C311940059310F /* UITableViewCell+Extension.swift in Sources */,
 				17B0BBBB29BF7D2C00B08EA7 /* Coordinator.swift in Sources */,
 				178638C529C22BD00059310F /* SavedLocationCellModel.swift in Sources */,
+				170D9C0529CB4DBD00A15042 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

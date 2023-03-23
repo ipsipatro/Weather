@@ -35,7 +35,7 @@ class WeatherViewController: UIViewController {
         addBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
         navigationItem.rightBarButtonItem = addBarButtonItem
 
-        cancelBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: nil)
+        cancelBarButtonItem = UIBarButtonItem(title: Constants.cancelTitle, style: .plain, target: self, action: nil)
         navigationItem.leftBarButtonItem = cancelBarButtonItem
     }
     
